@@ -6,13 +6,16 @@ var API_KEY = ''
 
 async function enviarMensagemBotConversa(telefone, nome = '', sobrenome = '', idFlowBotConversa, chaveapi) {
   try {
+    telefone = '+55' + telefone
     setApiToken(chaveapi)
     await cadastrarUsuario(telefone, nome, sobrenome)    
     let idContatoBotConversa = await buscarIDUsuarioPorTelefone(telefone)
+
     await enviarMensagemFlow(idContatoBotConversa, idFlowBotConversa)
     
   } catch (error) {
-    throw new UserException(error.message);
+    console.log(error.message);
+   //throw new UserException(error.message);
   }
 
 
@@ -20,7 +23,7 @@ async function enviarMensagemBotConversa(telefone, nome = '', sobrenome = '', id
 
 async function cadastrarUsuario(telefone, nome, sobrenome) {
   let data = JSON.stringify({
-    "phone": "+55" + telefone,
+    "phone": telefone,
     "first_name": nome,
     "last_name": sobrenome
   });
@@ -41,7 +44,8 @@ async function cadastrarUsuario(telefone, nome, sobrenome) {
       console.log('Usuário cadatrado com sucesso!');
     })
     .catch(function (error) {
-      throw new UserException('Não foi possível cadastrar o usuário');
+      console.log('Usuário já existe!');
+      //throw new UserException('Não foi possível cadastrar o usuário');
     });
 }
 
@@ -59,9 +63,11 @@ async function buscarIDUsuarioPorTelefone(telefone) {
   await axios(config)
     .then(function (response) {
       idContato = response.data.id;
+      console.log('ID BotConversa: ' + idContato);
     })
     .catch(function (error) {
-      throw new UserException('Não foi possível localizar o usuário pelo telefone');
+      console.log('Não foi possível localizar o usuário pelo telefone');
+      //throw new UserException('Não foi possível localizar o usuário pelo telefone');
     });
 
   return idContato
@@ -84,10 +90,13 @@ async function enviarMensagemFlow(idContatoBotConversa, idFlowBotConversa) {
 
   await axios(config)
     .then(function (response) {
-      console.log(JSON.stringify(response.data));
+      console.log('Mensagem enviada com sucesso!');
+      //console.log(JSON.stringify(response.data)); 
     })
     .catch(function (error) {
-      throw new UserException('Não foi possível enviar a mensagem');
+      console.log('Não foi possível enviar a mensagem');
+      //console.log(error.message);
+      //throw new  UserException('Não foi possível enviar a mensagem');
     });
 }
 
@@ -96,7 +105,7 @@ function setApiToken(chaveapi) {
   let api = dados.filter(o => o.name == chaveapi)[0]
 
   if (api == "" || api == undefined) {
-    throw new UserException("Chave API Inválida!");
+    //throw new UserException("Chave API Inválida!");
   } else {
     console.log("## LOGADO ##")
     console.log(api.empresa)
@@ -105,7 +114,7 @@ function setApiToken(chaveapi) {
   }
 }
 
-function UserException(message) {
+async function UserException(message) {
   this.message = message;
   this.name = "UserException";
 }
