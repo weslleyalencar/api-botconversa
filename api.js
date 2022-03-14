@@ -9,6 +9,7 @@ async function enviarMensagemBotConversa(telefone, nome = '', sobrenome = '', id
     telefone = '+55' + telefone
     setApiToken(chaveapi)
     await cadastrarUsuario(telefone, nome, sobrenome)    
+    
     let idContatoBotConversa = await buscarIDUsuarioPorTelefone(telefone)
 
     await enviarMensagemFlow(idContatoBotConversa, idFlowBotConversa)
@@ -39,7 +40,7 @@ async function cadastrarUsuario(telefone, nome, sobrenome) {
   };
 
 
-  axios(config)
+  await axios(config)
     .then(function (response) {
       console.log('Usuário cadatrado com sucesso!');
     })
