@@ -17,6 +17,16 @@ app.get('/enviar-mensagem', async (req, res) => {
     }    
 })
 
+app.post('/enviar-mensagem', async (req, res) => {
+    let {telefone, nome, sobrenome, idflow, chaveapi} = req.query
+    try {
+        await senderBot.enviarMensagemBotConversa(telefone, nome, sobrenome, idflow, chaveapi)        
+        res.send({message: "Mensagem enviada com sucesso para o número " + telefone})
+    } catch (error) {
+        res.send({message: error.message})
+    }    
+})
+
 app.use(express.json)
 
 app.listen(port, ()=>{
