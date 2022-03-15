@@ -10,6 +10,8 @@ app.get('/', function(req, res){
 app.get('/enviar-mensagem', async (req, res) => {
     let {telefone, nome, sobrenome, idflow, chaveapi} = req.query
     try {
+        telefone = senderBot.ajustarTelefone(telefone)
+        console.log('Telefone: ' + telefone)
         await senderBot.enviarMensagemBotConversa(telefone, nome, sobrenome, idflow, chaveapi)        
         res.send({message: "Mensagem enviada com sucesso para o número " + telefone})
     } catch (error) {
@@ -20,6 +22,8 @@ app.get('/enviar-mensagem', async (req, res) => {
 app.post('/enviar-mensagem', async (req, res) => {
     let {telefone, nome, sobrenome, idflow, chaveapi} = req.query
     try {
+        telefone = senderBot.ajustarTelefone(telefone)
+        console.log('Telefone: ' + telefone)
         await senderBot.enviarMensagemBotConversa(telefone, nome, sobrenome, idflow, chaveapi)        
         res.send({message: "Mensagem enviada com sucesso para o número " + telefone})
     } catch (error) {

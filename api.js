@@ -6,13 +6,13 @@ var API_KEY = ''
 
 async function enviarMensagemBotConversa(telefone, nome = '', sobrenome = '', idFlowBotConversa, chaveapi) {
   try {
-    telefone = '+55' + telefone
     setApiToken(chaveapi)
     await cadastrarUsuario(telefone, nome, sobrenome)    
     
     let idContatoBotConversa = await buscarIDUsuarioPorTelefone(telefone)
 
     await enviarMensagemFlow(idContatoBotConversa, idFlowBotConversa)
+
     
   } catch (error) {
     console.log(error.message);
@@ -108,9 +108,8 @@ function setApiToken(chaveapi) {
   if (api == "" || api == undefined) {
     //throw new UserException("Chave API Inválida!");
   } else {
-    console.log("## LOGADO ##")
+    console.log('LOGADO')
     console.log(api.empresa)
-    console.log("#############")
     API_KEY = api.value
   }
 }
@@ -120,5 +119,16 @@ async function UserException(message) {
   this.name = "UserException";
 }
 
+function ajustarTelefone(telefone){
+  let tel =  telefone.replaceAll('.','').replaceAll('-','').replaceAll('(','').replaceAll(')','').replaceAll(' ','').replaceAll('+','')
+  if (tel.startsWith('55')){
+      console.log('Passou')
+      tel = tel.slice(2,)
+  }
+  
+  return '+55' + tel
+  
+  }
 
 module.exports.enviarMensagemBotConversa = enviarMensagemBotConversa
+module.exports.ajustarTelefone = ajustarTelefone
